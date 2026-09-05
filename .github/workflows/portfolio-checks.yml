@@ -1,0 +1,39 @@
+name: Portfolio quality checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'resume.html'
+      - 'assets/**'
+      - 'tests/**'
+      - '.github/workflows/portfolio-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out portfolio
+        uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check assets/site.js
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Run responsive and interaction tests
+        run: node tests/browser-checks.cjs
+      - name: Save screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-browser-checks
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 7
