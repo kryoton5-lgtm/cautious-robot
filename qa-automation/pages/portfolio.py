@@ -1,5 +1,6 @@
 """Page-object methods isolate locators from test assertions."""
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -17,7 +18,14 @@ class PortfolioPage:
 
     def click(self, selector):
         element = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+        self.driver.execute_script(
+            "document.documentElement.style.setProperty('scroll-behavior','auto','important');"
+            "arguments[0].scrollIntoView({block:'center',behavior:'instant'});", element
+        )
+        self.wait.until(lambda d: d.execute_script(
+            "const r=arguments[0].getBoundingClientRect();"
+            "return r.top >= 0 && r.bottom <= window.innerHeight;", element
+        ))
         element.click()
         return element
 
