@@ -37,7 +37,7 @@ def test_project_filters_show_expected_cards(page, category, expected):
 def test_project_dialog_opens_and_escape_closes_it(page):
     page.click('[data-open-project="evalforge"]')
     WebDriverWait(page.driver, 5).until(lambda _: page.dialog_is_open())
-    assert page.driver.find_element(By.ID, "project-title").text == "EvalForge"
+    assert page.driver.find_element(By.ID, "project-title").get_attribute("textContent").strip() == "EvalForge"
     page.driver.switch_to.active_element.send_keys(Keys.ESCAPE)
     WebDriverWait(page.driver, 5).until(lambda _: not page.dialog_is_open())
 
@@ -94,7 +94,7 @@ def test_search_palette_keyboard_navigation(page):
     assert len(buttons) == 1
     search.send_keys(Keys.ENTER)
     WebDriverWait(page.driver, 5).until(lambda _: page.dialog_is_open())
-    assert page.driver.find_element(By.ID, "project-title").text == "Thermal Reactor Twin"
+    assert page.driver.find_element(By.ID, "project-title").get_attribute("textContent").strip() == "Thermal Reactor Twin"
 
 
 @pytest.mark.regression
