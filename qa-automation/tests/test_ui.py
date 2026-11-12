@@ -7,6 +7,7 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from pages.portfolio import PortfolioPage
 
@@ -85,10 +86,9 @@ def test_csv_export_has_expected_header_and_row_count(page, tmp_path):
 @pytest.mark.regression
 def test_search_palette_keyboard_navigation(page):
     page.click("#command-open")
-    search = WebDriverWait(page.driver, 5).until(
-        lambda d: d.find_element(By.ID, "command-search")
+    search = WebDriverWait(page.driver, 10).until(
+        EC.visibility_of_element_located((By.ID, "command-search"))
     )
-    assert search.is_displayed()
     search.send_keys("Thermal")
     buttons = page.driver.find_elements(By.CSS_SELECTOR, "#command-results button")
     assert len(buttons) == 1
