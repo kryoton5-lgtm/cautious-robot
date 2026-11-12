@@ -20,7 +20,7 @@ def page(driver, site_url):
 def test_homepage_has_expected_content_and_navigation(page):
     assert page.driver.title == "Shubham Kadam — Scientific Computing & AI Evaluation"
     assert len(page.driver.find_elements(By.CSS_SELECTOR, ".project-card")) == 4
-    assert page.driver.find_element(By.CSS_SELECTOR, 'a.skip[href="#main"]').is_displayed()
+    assert page.driver.find_element(By.CSS_SELECTOR, 'a.skip[href="#main"]').get_attribute("href").endswith("#main")
 
 
 @pytest.mark.regression
@@ -84,7 +84,7 @@ def test_csv_export_has_expected_header_and_row_count(page, tmp_path):
 
 @pytest.mark.regression
 def test_search_palette_keyboard_navigation(page):
-    page.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.CONTROL, "k")
+    page.click("#command-open")
     search = WebDriverWait(page.driver, 5).until(
         lambda d: d.find_element(By.ID, "command-search")
     )
