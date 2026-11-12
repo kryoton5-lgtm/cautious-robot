@@ -28,6 +28,14 @@ No files need to be uploaded manually. The complete site is in the root of this 
 - **Technical expertise:** detailed scientific-computing, data-analysis, machine-learning, GenAI, evaluation, and documentation sections.
 - **Professional presentation:** dark/light themes, responsive layouts, keyboard navigation, a searchable command menu, reduced-motion controls, and a printable résumé.
 
+## Software test automation — Selenium + pytest
+
+[![Selenium QA CI](https://github.com/kryoton5-lgtm/cautious-robot/actions/workflows/selenium-qa.yml/badge.svg)](https://github.com/kryoton5-lgtm/cautious-robot/actions/workflows/selenium-qa.yml)
+
+A dedicated [Python/Selenium/pytest QA automation suite](qa-automation/README.md) tests this interactive portfolio with a Page Object Model, functional and regression cases, CSV integrity checks, responsive scenarios, and HTTP contracts. GitHub Actions publishes HTML/JUnit reports and failure screenshots. The initial 22-case pull-request suite passed on 12 November 2026.
+
+This is a personal engineering demonstration, not a client project or an official certification.
+
 ## Run locally
 
 From the repository directory, run:
