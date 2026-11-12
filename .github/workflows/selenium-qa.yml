@@ -1,0 +1,57 @@
+name: Selenium Python pytest QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qa-automation/**'
+      - 'index.html'
+      - 'resume.html'
+      - 'assets/**'
+      - '.github/workflows/selenium-qa.yml'
+  pull_request:
+    paths:
+      - 'qa-automation/**'
+      - 'index.html'
+      - 'resume.html'
+      - 'assets/**'
+      - '.github/workflows/selenium-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selenium-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set up Chrome and ChromeDriver
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+          install-chromedriver: true
+      - name: Install testing dependencies
+        run: python -m pip install -r qa-automation/requirements.txt
+      - name: Run Selenium and HTTP regression tests
+        env:
+          CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
+          CHROMEDRIVER: ${{ steps.chrome.outputs.chromedriver-path }}
+        run: |
+          python -m pytest qa-automation/tests -v             --junitxml=qa-automation/junit.xml             --html=qa-automation/report.html --self-contained-html
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-qa-evidence
+          path: |
+            qa-automation/junit.xml
+            qa-automation/report.html
+            qa-automation/artifacts/
+          if-no-files-found: warn
+          retention-days: 14
